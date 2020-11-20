@@ -3,14 +3,22 @@
     class="h-screen xl:w-4/5 m-auto"
     style="font-family: 'Poppins', sans-serif"
   >
-    <div class="p-2">
-      Control Panel
+    <div class="p-2 ml-2">
+      Change Steps:
       <button @click="$store.commit('decrementStep')" class="p-2 bg-red-400">
         Step down
       </button>
       <button @click="$store.commit('incrementStep')" class="p-2 bg-green-400">
         Step up
       </button>
+      <label class="ml-4" for="changeAmount">Change Amount:</label>
+      <input
+        class="border"
+        type="number"
+        name="changeamount"
+        id="changeamount"
+        @input="$store.commit('changeAmount', $event.target.value)"
+      />
     </div>
     <div class="w-full h-16 bg-gray-200"></div>
     <div class="bg-gray-50 flex">

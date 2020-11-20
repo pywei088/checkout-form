@@ -30,4 +30,7 @@ export const mutations = {
     state.formErrors = []
     state.formErrors = payload.errors
   },
+  changeAmount(state, amount) {
+    state.amountToPay = amount
+  },
 }
