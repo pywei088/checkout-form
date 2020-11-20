@@ -1,35 +1,97 @@
 <template>
-  <div class="bg-gray-200 h-screen pt-20 px-20 flex">
-    <div class="w-4/5">
-      <div class="w-2/3">
-        <h1 class="text-3xl font-bold text-gray-800">Confirm order and pay</h1>
-        <p class="text-gray-600">
-          Please make the payment, after that you can enjoy all the features and
-          benefits.
-        </p>
-      </div>
-      <div class="mt-20 flex">
-        <div class="w-2/3 p-6 bg-white mr-10 rounded-lg space-y-4">
-          <h3 class="text-sm font-bold">PAYMENT DETAILS</h3>
-          <form action="payment">
-            <label for="name" class="block text-xs text-gray-600">
-              Name on card
-            </label>
-            <input
-              class="form-input block w-full text-sm font-bold leading-5 focus:border-purple-700 focus:shadow-outline-purple"
-              type="text"
-              name="name"
-              id="name"
-            />
-          </form>
-        </div>
-        <div class="w-1/3 h-64 bg-purple-700 rounded-lg"></div>
-      </div>
+  <div class="h-screen" style="font-family: 'Poppins', sans-serif">
+    <div class="p-2">
+      Control Panel
+      <button @click="$store.commit('decrementStep')" class="p-2 bg-red-400">
+        Step down
+      </button>
+      <button @click="$store.commit('incrementStep')" class="p-2 bg-green-400">
+        Step up
+      </button>
     </div>
-    <div class="w-1/5"></div>
+    <div class="w-full h-16 bg-gray-200"></div>
+    <div class="bg-gray-50 flex">
+      <div class="w-9/12 px-16 z-30 shadow-lg pb-20">
+        <div class="w-2/3 mt-20 h-24">
+          <h1 class="text-3xl font-semibold text-gray-800">
+            Confirm order and pay
+          </h1>
+          <p class="text-gray-400 pr-7 font-semibold">
+            Please make the payment, after that you can enjoy all the features
+            and benefits.
+          </p>
+        </div>
+        <div class="mt-20 flex items-start">
+          <!-- Takes users payment information -->
+          <FormCheckout />
+
+          <AmountCard
+            :amountDec="removeZero(amountDec)"
+            :amountInt="amountInt"
+          />
+        </div>
+        <div class="w-2/3 pr-7 mt-10 flex justify-between">
+          <button class="text-gray-300 font-semibold text-sm pr-3">
+            Previous step
+          </button>
+          <button
+            class="px-9 py-4 rounded-md bg-purple-700 text-white font-semibold text-sm"
+            @click="checkForm"
+          >
+            Pay ${{ amountInt }}
+          </button>
+        </div>
+      </div>
+      <div class="w-14 bg-gray-200"></div>
+
+      <StepBar />
+    </div>
   </div>
 </template>
 
 <script>
-export default {}
+import StepBar from '../components/StepBar.vue'
+import AmountCard from '../components/AmountCard.vue'
+import FormCheckout from '../components/FormCheckout.vue'
+export default {
+  components: { FormCheckout, AmountCard, StepBar },
+  computed: {
+    amount() {
+      return this.$store.state.amountToPay
+    },
+    amountDec() {
+      return this.amount - this.amountInt
+    },
+    amountInt() {
+      return Math.floor(this.amount)
+    },
+  },
+  methods: {
+    removeZero() {
+      const number = this.amountDec.toFixed(2)
+      const length = number.length
+      let removedZero = ''
+      for (let i = 0; i < length; i++) {
+        if (i > 0) {
+          removedZero += number[i]
+        }
+      }
+      return removedZero
+    },
+    checkForm() {
+      const errors = []
+      for (const key in this.$store.state.paymentDetails) {
+        if (!this.$store.state.paymentDetails[key]) {
+          errors.push('no' + key)
+        }
+      }
+      for (const key in this.$store.state.billingAddress) {
+        if (!this.$store.state.billingAddress[key]) {
+          errors.push('no' + key)
+        }
+      }
+      this.$store.commit('addErrors', { errors })
+    },
+  },
+}
 </script>
