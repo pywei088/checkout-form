@@ -1,5 +1,8 @@
 <template>
-  <div class="h-screen" style="font-family: 'Poppins', sans-serif">
+  <div
+    class="h-screen xl:w-4/5 m-auto"
+    style="font-family: 'Poppins', sans-serif"
+  >
     <div class="p-2">
       Control Panel
       <button @click="$store.commit('decrementStep')" class="p-2 bg-red-400">
