@@ -1,5 +1,8 @@
 # checkout-form
 
+## Live Demo
+https://affectionate-wiles-815782.netlify.app/
+
 ## Build Setup
 
 ```bash
